@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>John & Kenzie's Wedding RSVP</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        input {
+            padding: 10px;
+            font-size: 18px;
+            margin-top: 10px;
+            width: 300px;
+            max-width: 80%;
+        }
+        .count {
+            font-size: 24px;
+            margin-top: 20px;
+        }
+        .guest-list {
+            margin-top: 20px;
+        }
+        .guest-list h3 {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>John & Kenzie's Wedding RSVP</h1>
+    <p>Will you be attending?</p>
+
+    <input type="text" id="guestName" placeholder="Enter your name" required />
+    <div>
+        <button onclick="submitRSVP('yes')">Yes</button>
+        <button onclick="submitRSVP('no')">No</button>
+    </div>
+
+    <div class="count">
+        <p><strong>Yes Responses:</strong> <span id="yesCount">0</span></p>
+    </div>
+
+    <div class="guest-list">
+        <h3>Guest List (Yes):</h3>
+        <ul id="guestList"></ul>
+    </div>
+
+    <script>
+        // Initialize or retrieve stored data from local storage
+        let yesCount = parseInt(localStorage.getItem('yesCount')) || 0;
+        let guestList = JSON.parse(localStorage.getItem('guestList')) || [];
+
+        // Update the counter and guest list on page load
+        document.getElementById('yesCount').innerText = yesCount;
+        updateGuestList();
+
+        function submitRSVP(response) {
+            const guestName = document.getElementById('guestName').value.trim();
+            if (!guestName) {
+                alert('Please enter your name before submitting.');
+                return;
+            }
+
+            if (response === 'yes') {
+                yesCount++;
+                guestList.push(guestName);
+
+                // Store updated data in local storage
+                localStorage.setItem('yesCount', yesCount);
+                localStorage.setItem('guestList', JSON.stringify(guestList));
+
+                // Update the counter and guest list
+                document.getElementById('yesCount').innerText = yesCount;
+                updateGuestList();
+            }
+            alert(`Thank you, ${guestName}, for your response: ${response}`);
+            document.getElementById('guestName').value = ''; // Clear input field
+        }
+
+        function updateGuestList() {
+            const guestListElement = document.getElementById('guestList');
+            guestListElement.innerHTML = ''; // Clear current list
+
+            guestList.forEach((guest) => {
+                const listItem = document.createElement('li');
+                listItem.innerText = guest;
+                guestListElement.appendChild(listItem);
+            });
+        }
+    </script>
+</body>
+</html>
